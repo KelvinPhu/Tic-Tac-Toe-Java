@@ -1,45 +1,50 @@
 import java.util.Scanner;
 
 public class Main {
+	
+	private static final char EMPTY_CELL = ' ';
+	private static final char PLAYER_X = 'X';
+	private static final char PLAYER_O = 'O';
+	
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		
-		char[][] printBoard = {
-				{' ', '|', ' ', '|', ' '},
-                {'-', '+', '-', '+', '-'},
-                {' ', '|', ' ', '|', ' '},
-                {'-', '+', '-', '+', '-'},
-                {' ', '|', ' ', '|', ' '}
-		};
-		
-		char currentPlayer = 'X';
+		char[][] board = initializeBoard();
+		char currentPlayer = PLAYER_X;
 		int filledCalls = 0;
 		
 		while(true) {
-			printBoard(printBoard);
+			printBoard(board);
 			
 			System.out.println("Player " +currentPlayer+ " enter your placement [x, y]: ");
 			int row = sc.nextInt() * 2 - 2;
 			int col = sc.nextInt() * 2 - 2;
 			
-			if(row >= 0 && row < printBoard.length && col >= 0 && col < printBoard[0].length && printBoard[row][col] == ' ') {
-				printBoard[row][col] = currentPlayer;
+			if(isValidMove(board, row, col)) {
+				board[row][col] = currentPlayer;
 				filledCalls++;
 				
-				if(checkWinner(printBoard, currentPlayer)) {
+				if(checkWinner(board, currentPlayer)) {
 					System.out.println("Player " +currentPlayer+ " win!");
 					break;
-				}else if(filledCalls == 9){
-					System.out.println("Cat!");
+				}else if(filledCalls == 9) {
+					System.out.println("CAT!");
 					break;
 				}
+				currentPlayer = switchPlayer(currentPlayer);
 			}else {
-				System.out.println("Invalid placement, try again.");
-				continue;
+				System.out.println("Invalid move, try again!");
 			}
-			
-			currentPlayer = (currentPlayer == 'X' ? 'O' : 'X');
 		}
+	}
+	
+	private static char[][] initializeBoard(){
+		return new char[][] {
+			{EMPTY_CELL, '|', EMPTY_CELL, '|', EMPTY_CELL},
+            {'-', '+', '-', '+', '-'},
+            {EMPTY_CELL, '|', EMPTY_CELL, '|', EMPTY_CELL},
+            {'-', '+', '-', '+', '-'},
+            {EMPTY_CELL, '|', EMPTY_CELL, '|', EMPTY_CELL}
+		};
 	}
 	
 	public static void printBoard(char[][] board) {
@@ -50,6 +55,20 @@ public class Main {
 			System.out.println();
 		}
 	}
+	
+	private static boolean isValidMove(char[][] board, int row, int col) {
+		if(row >= 0 && row < board.length && col >= 0 && col < board[0].length && board[row][col] == EMPTY_CELL) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private static char switchPlayer(char currentPlayer) {
+		return currentPlayer == PLAYER_X ? PLAYER_O : PLAYER_X;
+	}
+	
+	
 	
 	public static boolean checkWinner(char[][] board, char player) {
 		// check all vertically 
