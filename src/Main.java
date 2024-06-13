@@ -70,7 +70,7 @@ public class Main {
 		if(board[0][0] == player && board[2][2] == player && board[4][4] == player) {
 			return true;
 		}
-		if(board[4][4] == player && board[2][2] == player && board[4][0] == player) {
+		if(board[0][4] == player && board[2][2] == player && board[4][0] == player) {
 			return true;
 		}
 		
